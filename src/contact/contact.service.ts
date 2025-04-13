@@ -5,7 +5,7 @@ import { InjectModel } from "@nestjs/mongoose";
 import { CreateContactDto } from "./dto/create-contact.dto";
 
 @Injectable()
-export class ContactsService {
+export class ContactService {
   constructor(
     @InjectModel(Contact.name) private readonly ContactModel: ContactModel,
   ) {}
@@ -41,6 +41,6 @@ export class ContactsService {
     const contact = await this.ContactModel.findByIdAndDelete(id).exec();
     if (!contact) throw new NotFoundException("Contact not found");
 
-    return contact;
+    return null;
   }
 }

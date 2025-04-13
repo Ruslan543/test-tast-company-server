@@ -3,14 +3,16 @@ import { Company, CompanyModel } from "./company.model";
 import { InjectModel } from "@nestjs/mongoose";
 import { CreateCompanyDto } from "./dto/create-company.dto";
 import { UpdateCompanyDto } from "./dto/update-company.dto";
+import { ContactService } from "src/contact/contact.service";
 
 @Injectable()
 export class CompanyService {
   constructor(
     @InjectModel(Company.name) private readonly CompanyModel: CompanyModel,
+    private readonly contactService: ContactService,
   ) {}
 
-  async getOne(id: string) {
+  async byId(id: string) {
     const company = await this.CompanyModel.findById(id).exec();
     if (!company) {
       throw new NotFoundException("Company not found");
@@ -43,6 +45,7 @@ export class CompanyService {
       throw new NotFoundException("Company not found");
     }
 
-    return company;
+    await this.contactService.delete(String(company.contactId));
+    return null;
   }
 }

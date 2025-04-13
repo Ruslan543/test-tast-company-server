@@ -7,7 +7,6 @@ import {
   HttpStatus,
   Param,
   Patch,
-  Post,
   UsePipes,
   ValidationPipe,
 } from "@nestjs/common";
@@ -15,6 +14,8 @@ import { CompanyService } from "./company.service";
 import { IdValidationPipe } from "src/pipes/id.validation.pipe";
 import { UpdateCompanyDto } from "./dto/update-company.dto";
 import { CreateCompanyDto } from "./dto/create-company.dto";
+import { Auth } from "src/auth/decorators/auth.decorator";
+import { ROLES } from "src/auth/types/role.type";
 
 @Controller("companies")
 export class CompanyController {
@@ -22,13 +23,15 @@ export class CompanyController {
 
   @Get(":id")
   @HttpCode(HttpStatus.OK)
-  async getOne(@Param("id", IdValidationPipe) id: string) {
-    return this.companyService.getOne(id);
+  @Auth()
+  async byId(@Param("id", IdValidationPipe) id: string) {
+    return this.companyService.byId(id);
   }
 
   @Get(":id")
   @HttpCode(HttpStatus.CREATED)
   @UsePipes(new ValidationPipe())
+  @Auth()
   async create(@Body() dto: CreateCompanyDto) {
     return this.companyService.create(dto);
   }
@@ -36,6 +39,7 @@ export class CompanyController {
   @Patch(":id")
   @HttpCode(HttpStatus.OK)
   @UsePipes(new ValidationPipe())
+  @Auth(ROLES.ADMIN)
   async update(
     @Param("id", IdValidationPipe) id: string,
     @Body() dto: UpdateCompanyDto,
@@ -44,22 +48,9 @@ export class CompanyController {
   }
 
   @Delete(":id")
-  @HttpCode(HttpStatus.OK)
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @Auth(ROLES.ADMIN)
   async delete(@Param("id", IdValidationPipe) id: string) {
-    return this.companyService.delete(id);
-  }
-
-  // Нужно дописать эти методы
-  @Post(":id/image")
-  @HttpCode(HttpStatus.OK)
-  @UsePipes(new ValidationPipe())
-  async createImage(@Param("id", IdValidationPipe) id: string) {
-    return this.companyService.delete(id);
-  }
-
-  @Delete(":id/:imageName")
-  @HttpCode(HttpStatus.OK)
-  async deleteImage(@Param("id", IdValidationPipe) id: string) {
     return this.companyService.delete(id);
   }
 }

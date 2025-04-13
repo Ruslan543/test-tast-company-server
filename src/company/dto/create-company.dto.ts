@@ -1,4 +1,4 @@
-import { Type } from "class-transformer";
+import { Transform, Type } from "class-transformer";
 import {
   IsArray,
   IsIn,
@@ -9,8 +9,14 @@ import {
 import { Types } from "mongoose";
 import { ContractDto } from "./contract.dto";
 import { COMPANY_STATUS, CompanyStatus } from "../types/company.interface";
+import { IsObjectId } from "src/decorators/isObjectId.decorator";
+import { transformToObjectId } from "src/utils/transforms/object-id.transform";
+import { PhotoDto } from "./photo.dto";
 
 export class CreateCompanyDto {
+  @IsNotEmpty()
+  @IsObjectId()
+  @Transform(transformToObjectId())
   contactId: Types.ObjectId;
 
   @IsNotEmpty()
@@ -39,11 +45,9 @@ export class CreateCompanyDto {
   @IsString({ each: true })
   @IsArray()
   type: string[];
+
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => PhotoDto)
+  photos: PhotoDto[];
 }
-
-// Нужно дописать поля внизу
-
-// export class Company {
-//   contract: Contract;
-//   photos: Photo[];
-// }

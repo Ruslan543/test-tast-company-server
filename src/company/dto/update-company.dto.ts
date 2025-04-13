@@ -1,11 +1,5 @@
 import { Type } from "class-transformer";
-import {
-  IsArray,
-  IsDate,
-  IsOptional,
-  IsString,
-  ValidateNested,
-} from "class-validator";
+import { IsArray, IsOptional, IsString, ValidateNested } from "class-validator";
 import { ContractDto } from "./contract.dto";
 
 export class UpdateCompanyDto {
@@ -27,7 +21,7 @@ export class UpdateCompanyDto {
   contract?: ContractDto;
 
   @IsOptional()
-  @IsString({ each: true })
   @IsArray()
+  @IsString({ each: true })
   type?: string[];
 }

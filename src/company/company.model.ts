@@ -16,7 +16,7 @@ export class Contract {
 }
 export const ContractSchema = SchemaFactory.createForClass(Contract);
 
-@Schema()
+@Schema({ timestamps: true })
 export class Photo {
   name: string;
   filepath: string;
