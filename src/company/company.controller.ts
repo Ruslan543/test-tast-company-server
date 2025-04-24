@@ -7,6 +7,7 @@ import {
   HttpStatus,
   Param,
   Patch,
+  Post,
   UsePipes,
   ValidationPipe,
 } from "@nestjs/common";
@@ -28,7 +29,7 @@ export class CompanyController {
     return this.companyService.byId(id);
   }
 
-  @Get(":id")
+  @Post()
   @HttpCode(HttpStatus.CREATED)
   @UsePipes(new ValidationPipe())
   @Auth()
